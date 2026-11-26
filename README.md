@@ -1,6 +1,8 @@
-# Fisiorise
+# FisioRise
 
-Sitio web de la **Dra. Dina Reyes**, fisiatra y logopeda en Estelí y Ocotal (Nicaragua). Incluye la página principal (servicios, e-books, captación de contactos) y una **tienda tipo punto de venta** (`/tienda`).
+Sitio web profesional de la Dra. Dina Reyes, fisiatra y especialista en logopedia con atención en Estelí y Ocotal, Nicaragua.
+
+La plataforma presenta sus servicios de fisiatría integral, terapia de lenguaje, terapia online e intervención temprana, además de recursos gratuitos, libros digitales y opciones de contacto para agendar citas. Está diseñada como una página informativa accesible, responsiva y orientada a mostrar una atención humana, cercana y no invasiva para pacientes de todas las edades. También incluye una **tienda tipo punto de venta** (`/tienda`).
 
 ## Tecnologías
 
@@ -111,4 +113,14 @@ Compatible con [Vercel](https://vercel.com/) sin configuración adicional. Tambi
 ```bash
 npm run build
 npm start
+```
+
+## Flujo de trabajo con Git
+
+- **`develop`** es la rama de integración: todo cambio entra aquí, normalmente desde una rama de trabajo (`feat/…`, `fix/…`) mediante un Pull Request.
+- **`main`** solo recibe lo que ya está completo y probado, siempre desde `develop`.
+- Ninguna de las dos se elimina; `develop` se mantiene siempre.
+
+```
+feat/mi-cambio ──PR──▶ develop ──(área completa)──▶ main
 ```
