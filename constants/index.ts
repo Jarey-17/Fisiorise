@@ -44,6 +44,44 @@ export interface NavLinkItem {
   label: string;
 }
 
+export interface DownloadItem {
+  title: string;
+  description: string;
+  /** Ruta pública del archivo dentro de public/, p. ej. "/descargas/guia.pdf". */
+  file: string;
+  /** Peso legible, p. ej. "5.2 MB" (opcional). */
+  size?: string;
+}
+
+/**
+ * Espacio de descargas. Los archivos van en public/descargas/ y TODO lo que
+ * está en public/ es accesible por cualquiera que conozca la URL: publica solo
+ * documentos que puedan ser públicos. Con la lista vacía la sección y sus
+ * enlaces no se muestran.
+ */
+export const DOWNLOADS_DATA = {
+  id: "descargas",
+  title: "Centro de ",
+  titleHighlight: "Descargas",
+  description: "Documentos en PDF disponibles para descargar.",
+  navLabel: "Descargas",
+  buttonLabel: "Descargar PDF",
+  list: [
+    {
+      title: "Resultado de laboratorio",
+      description: "Biometría hemática en formato PDF.",
+      file: "/descargas/resultado-laboratorio.pdf",
+      size: "5.2 MB",
+    },
+  ] satisfies DownloadItem[],
+};
+
+/** Enlace de menú hacia las descargas; vacío si no hay documentos. */
+const DOWNLOADS_NAV_LINKS: NavLinkItem[] =
+  DOWNLOADS_DATA.list.length > 0
+    ? [{ href: `#${DOWNLOADS_DATA.id}`, label: DOWNLOADS_DATA.navLabel }]
+    : [];
+
 export const NAVBAR_DATA = {
   logo: {
     src: IMAGES.logo,
@@ -56,6 +94,7 @@ export const NAVBAR_DATA = {
     { href: "#servicios", label: "Servicios" },
     { href: "#nosotros", label: "Conóceme" },
     { href: "#ebooks", label: "E-books" },
+    ...DOWNLOADS_NAV_LINKS,
     { href: ROUTES.store, label: "Tienda" },
   ] satisfies NavLinkItem[],
   cta: { href: "#contacto", label: "Agenda tu cita" },
@@ -235,6 +274,7 @@ export const FOOTER_DATA = {
     links: [
       { href: "#servicios", label: "Servicios" },
       { href: "#ebooks", label: "E-books gratuitos" },
+      ...DOWNLOADS_NAV_LINKS,
       { href: "#recursos", label: "Comunidad & Tips" },
       { href: ROUTES.store, label: "Tienda de productos" },
       { href: "#contacto", label: "Agendar cita" },
