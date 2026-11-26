@@ -39,7 +39,7 @@ Abre [http://localhost:3000](http://localhost:3000).
 
 | Ruta      | Contenido                                                                  |
 | --------- | -------------------------------------------------------------------------- |
-| `/`       | Navbar, hero, servicios, e-books, captación de contactos y footer          |
+| `/`       | Navbar, hero, servicios, e-books, descargas, captación de contactos y footer |
 | `/tienda` | Punto de venta: catálogo con filtros y búsqueda, carrito, IVA y recibo     |
 
 Ambas páginas se generan de forma estática en el build.
@@ -56,7 +56,7 @@ app/
   fonts/              Neulis Cursive (.ttf)
 components/
   layout/             Navbar (menú móvil) y Footer
-  home/               Hero, Services, Ebooks, LeadMagnet y LeadForm
+  home/               Hero, Services, Ebooks, Downloads, LeadMagnet y LeadForm
   store/              Pos (estado), Catalog, Cart, ReceiptModal y StoreHeader
   ui/                 Icon, AppLink y Reveal (animación al hacer scroll)
 constants/
@@ -67,6 +67,7 @@ lib/
   pos.ts              Cálculo de totales y formato de montos (C$)
   reveal.ts           Retrasos escalonados de la animación de entrada
 public/images/        Logos (SVG) y foto de perfil
+public/descargas/     PDF del espacio de descargas
 ```
 
 ## Cómo editar el contenido
@@ -75,6 +76,8 @@ public/images/        Logos (SVG) y foto de perfil
 - **Productos de la tienda, precios, stock y el IVA:** `constants/products.ts`.
 - **Colores, tipografías, radios y sombras:** variables CSS al inicio de `app/globals.css` (`--color-primary`, `--color-secondary`, `--color-neutral`, …).
 - **Imágenes:** colócalas en `public/images/` y referencia la ruta como `/images/archivo.ext`.
+- **Documentos para descargar:** copia el PDF a `public/descargas/` y agrega una entrada (`title`, `description`, `file` y, opcional, `size`) a `DOWNLOADS_DATA.list` en `constants/index.ts`. La sección y sus enlaces del menú y del pie aparecen solos; si la lista queda vacía, desaparecen.
+  > **Ojo:** todo lo que está en `public/` es accesible por cualquiera que conozca la URL, aunque no esté enlazado. Publica solo documentos que puedan ser públicos y evita nombres de archivo con datos personales.
 - **Foto que aparece al pasar el cursor sobre el hero:** `HERO_DATA.hoverImage` en `constants/index.ts`. Hoy repite la foto de perfil; reemplázala por una foto de sesión clínica.
 
 ### Agregar una página

@@ -926,16 +926,6 @@ h2,
         --px: 2rem;
     }
 
-    /* Navbar */
-    .navbar__links {
-        display: flex;
-    }
-
-    .navbar__toggle,
-    .navbar__mobile.is-open {
-        display: none;
-    }
-
     /* Hero: centrado en mobile, izquierda en desktop */
     .hero__text {
         text-align: left;
@@ -960,6 +950,17 @@ h2,
 
 /* ---- Desktop grande (≥ 1024px) ---- */
 @media (min-width: 1024px) {
+
+    /* Navbar: el menú completo (con 5 enlaces + CTA) solo cabe desde 1024px;
+       por debajo se usa el menú hamburguesa */
+    .navbar__links {
+        display: flex;
+    }
+
+    .navbar__toggle,
+    .navbar__mobile.is-open {
+        display: none;
+    }
 
     /* Hero: 2 columnas */
     .hero__grid {
@@ -1597,4 +1598,87 @@ h2,
     border: none;
     border-top: 1px solid #e2e8f0;
     margin: .5rem 0;
+}
+
+/* =============================================
+   DOWNLOADS (espacio de descargas)
+   ============================================= */
+.downloads {
+    background-color: var(--color-white);
+    padding: 6rem 0;
+}
+
+/* Tarjetas centradas sin importar cuántas haya (1, 2, 3…) */
+.downloads__grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 22rem));
+    justify-content: center;
+}
+
+.download-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: color-mix(in srgb, var(--color-neutral) 30%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 60%, transparent);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    /* incluye opacity para que el fade-in de .reveal se conserve */
+    transition: opacity .6s ease, transform .3s, box-shadow .3s, border-color .3s;
+}
+
+.download-card:hover {
+    transform: translateY(-.5rem);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+.download-card__icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    box-shadow: var(--shadow-sm);
+}
+
+.download-card__icon .icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.download-card__title {
+    font-family: var(--font-poppins);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+}
+
+.download-card__desc {
+    flex: 1;
+    font-size: .9375rem;
+    color: color-mix(in srgb, var(--color-secondary) 70%, transparent);
+    line-height: 1.7;
+}
+
+.download-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.download-card__meta {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-secondary) 70%, transparent);
+}
+
+.download-card__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
 }
