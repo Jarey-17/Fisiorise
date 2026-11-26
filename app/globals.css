@@ -1,36 +1,19 @@
 /* =============================================
-   FISIORISE — main.css
+   FISIORISE — globals.css
    Sin dependencias externas de framework
    ============================================= */
 
-/* ---------- FUENTES ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-@font-face {
-    font-family: 'Neulis Cursive';
-    src: url('../assets/fonts/NeulisCursive-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Neulis Cursive';
-    src: url('../assets/fonts/NeulisCursive-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* ---------- VARIABLES ---------- */
+/* ---------- VARIABLES ----------
+   Las fuentes se cargan con next/font en app/layout.tsx, que define
+   --font-poppins-loaded y --font-neulis-loaded sobre <html>. */
 :root {
     --color-primary: #1FAEE1;
     --color-secondary: #578045;
     --color-neutral: #EFE6DD;
     --color-white: #ffffff;
 
-    --font-neulis: 'Neulis Cursive', cursive;
-    --font-poppins: 'Poppins', system-ui, sans-serif;
+    --font-neulis: var(--font-neulis-loaded), cursive;
+    --font-poppins: var(--font-poppins-loaded), system-ui, sans-serif;
 
     --radius-sm: 0.5rem;
     --radius-md: 1rem;
@@ -137,6 +120,25 @@ html {
 
 .reveal-delay-4 {
     transition-delay: .4s;
+}
+
+/* Sin JavaScript no hay observer que revele el contenido: se muestra directo */
+@media (scripting: none) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Transición de entrada entre páginas (app/template.tsx) */
+.page-enter {
+    animation: fadeIn .35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-enter {
+        animation: none;
+    }
 }
 
 /* ---------- RESET BÁSICO ---------- */
@@ -929,7 +931,8 @@ h2,
         display: flex;
     }
 
-    .navbar__toggle {
+    .navbar__toggle,
+    .navbar__mobile.is-open {
         display: none;
     }
 
@@ -1209,6 +1212,11 @@ h2,
     display: flex;
     flex-direction: column;
     gap: .5rem;
+    /* Ahora es un <button>: se neutraliza el estilo nativo */
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    text-align: left;
 }
 
 .pos-product-card:hover {
@@ -1425,6 +1433,7 @@ h2,
 
 .pos-clear-btn {
     font-size: .8125rem;
+    line-height: inherit;
     color: #ef4444;
     text-align: center;
     cursor: pointer;
@@ -1547,4 +1556,45 @@ h2,
     margin-top: 1.25rem;
     font-size: .8125rem;
     padding: .5rem 1.1rem;
+}
+/* =============================================
+   AJUSTES DE LA MIGRACIÓN A NEXT.JS
+   Reemplazan los estilos inline del HTML original.
+   ============================================= */
+.footer__whatsapp-icon {
+    margin-right: .35rem;
+}
+
+.footer__region {
+    font-size: .8125rem;
+    opacity: .6;
+}
+
+.pos-header__logo {
+    height: 2.5rem;
+    width: auto;
+}
+
+.pos-products__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #94a3b8;
+    padding: 2rem;
+}
+
+.pos-cart__label {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: .25rem;
+}
+
+.pos-receipt__method {
+    text-transform: capitalize;
+}
+
+.pos-receipt__divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: .5rem 0;
 }
