@@ -39,8 +39,8 @@ Abre [http://localhost:3000](http://localhost:3000).
 
 | Ruta      | Contenido                                                                  |
 | --------- | -------------------------------------------------------------------------- |
-| `/`       | Navbar, hero, servicios, e-books, descargas, captación de contactos y footer |
-| `/tienda` | Punto de venta: catálogo con filtros y búsqueda, carrito, IVA y recibo     |
+| `/`       | Navbar, hero, servicios, conóceme, fases de la recuperación, mitos, descargas, e-books, comunidad, contacto y footer |
+| `/tienda` | Punto de venta (catálogo, carrito, IVA y recibo). Hoy muestra «Llegará pronto» |
 
 Ambas páginas se generan de forma estática en el build.
 
@@ -56,9 +56,10 @@ app/
   fonts/              Neulis Cursive (.ttf)
 components/
   layout/             Navbar (menú móvil) y Footer
-  home/               Hero, Services, Ebooks, Downloads, LeadMagnet y LeadForm
+  home/               Hero, Services, About, Recovery, Myths, Downloads, Ebooks,
+                      LeadMagnet, LeadForm y Contact
   store/              Pos (estado), Catalog, Cart, ReceiptModal y StoreHeader
-  ui/                 Icon, AppLink y Reveal (animación al hacer scroll)
+  ui/                 Icon, AppLink, Reveal (animación al hacer scroll) y ComingSoon
 constants/
   index.ts            Textos, enlaces y datos de contacto del sitio
   products.ts         Catálogo, categorías, métodos de pago e IVA de la tienda
@@ -66,8 +67,8 @@ constants/
 lib/
   pos.ts              Cálculo de totales y formato de montos (C$)
   reveal.ts           Retrasos escalonados de la animación de entrada
-public/images/        Logos (SVG) y foto de perfil
-public/descargas/     PDF del espacio de descargas
+public/images/        Logos (SVG), foto de perfil y portada de la guía
+public/descargas/     PDF del espacio de descargas (guía «De la fractura a la recuperación integral»)
 ```
 
 ## Cómo editar el contenido
@@ -76,7 +77,7 @@ public/descargas/     PDF del espacio de descargas
 - **Productos de la tienda, precios, stock y el IVA:** `constants/products.ts`.
 - **Colores, tipografías, radios y sombras:** variables CSS al inicio de `app/globals.css` (`--color-primary`, `--color-secondary`, `--color-neutral`, …).
 - **Imágenes:** colócalas en `public/images/` y referencia la ruta como `/images/archivo.ext`.
-- **Documentos para descargar:** copia el PDF a `public/descargas/` y agrega una entrada (`title`, `description`, `file` y, opcional, `size`) a `DOWNLOADS_DATA.list` en `constants/index.ts`. La sección y sus enlaces del menú y del pie aparecen solos; si la lista queda vacía, desaparecen.
+- **Documentos para descargar:** copia el PDF a `public/descargas/` y agrega una entrada (`title`, `description`, `file` y, opcional, `size`) a `DOWNLOADS_DATA.list` en `constants/index.ts`. Con `cover` (imagen de portada), `pages` y `highlights` la tarjeta se muestra destacada. La sección y sus enlaces del menú y del pie aparecen solos; si la lista queda vacía, desaparecen.
   > **Ojo:** todo lo que está en `public/` es accesible por cualquiera que conozca la URL, aunque no esté enlazado. Publica solo documentos que puedan ser públicos y evita nombres de archivo con datos personales.
 - **Foto que aparece al pasar el cursor sobre el hero:** `HERO_DATA.hoverImage` en `constants/index.ts`. Hoy repite la foto de perfil; reemplázala por una foto de sesión clínica.
 
@@ -103,10 +104,13 @@ Se eliminaron `@tailwindcss/cli` y `tailwindcss` de las dependencias: el CSS no 
 
 ## Pendientes conocidos
 
-- **Formulario de contacto:** `components/home/LeadForm.tsx` aún no envía los datos a ningún servicio de correo (hay un `TODO`).
-- **Anclas sin sección:** `#nosotros` (Conóceme), `#contacto` (Agenda tu cita) y `#online` (Terapia Online) están enlazadas, pero esas secciones todavía no existen en la página.
-- **E-books gratuitos:** el botón *Descargar* apunta a `#recursos`; falta enlazar los archivos reales.
-- **Tienda:** es una demo en memoria. No descuenta stock, no persiste las ventas ni procesa pagos reales.
+Lo que aún no tiene backend está apagado en `FEATURES` (`constants/index.ts`) y muestra un aviso de **«Llegará pronto»**. Para activarlo, cambia su valor a `true` cuando esté listo:
+
+- **`newsletter` — Comunidad Fisiatips:** `components/home/LeadForm.tsx` aún no envía los datos a ningún servicio de correo (hay un `TODO`).
+- **`ebooks` — E-books:** faltan los archivos reales y el cobro de los de pago.
+- **`store` — Tienda:** es una demo en memoria. No descuenta stock, no persiste las ventas ni procesa pagos reales.
+
+Además:
 - **Imagen para redes sociales:** `og:image` usa un SVG, que la mayoría de redes (Facebook, WhatsApp, X) no muestra. Conviene crear un PNG/JPG de 1200×630 en `public/images/` y apuntar `IMAGES`/`metadata` a él.
 
 ## Despliegue

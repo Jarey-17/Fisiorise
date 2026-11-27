@@ -59,7 +59,7 @@ export default function Footer() {
               <li className="footer__contact-item">
                 <Icon name="mapPin" className="icon icon--primary" />
                 <div className="footer__locations">
-                  {contact.locations.map((location) => (
+                  {CONTACT_DATA.locations.map((location) => (
                     <AppLink
                       key={location.label}
                       href={location.mapUrl}
@@ -95,6 +95,7 @@ export default function Footer() {
           </p>
           <span className="footer__region">{FOOTER_DATA.regionNote}</span>
         </div>
+        <p className="footer__disclaimer">{FOOTER_DATA.disclaimer}</p>
       </div>
     </footer>
   );
