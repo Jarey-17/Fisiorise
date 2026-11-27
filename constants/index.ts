@@ -16,7 +16,29 @@ export const IMAGES = {
   logo: "/images/IMAGOTIPO-MULTICOLOR-HORIZONTAL-BLOQUE.svg",
   isotype: "/images/ISOTIPO-578045.svg",
   profile: "/images/profile-photo.png",
+  guideCover: "/images/guia-fractura-portada.jpg",
 } as const;
+
+/**
+ * Funciones que dependen de un backend que todavía no existe. Mientras estén
+ * en `false`, la web muestra un aviso de "Llegará pronto" en su lugar.
+ */
+export const FEATURES = {
+  /** /tienda: catálogo, carrito y cobro (sin inventario ni pagos reales aún). */
+  store: false,
+  /** Catálogo de e-books (sin archivos ni pagos aún). */
+  ebooks: false,
+  /** Formulario de la comunidad (todavía no envía los datos a ningún servicio). */
+  newsletter: false,
+} as const;
+
+export const COMING_SOON_LABEL = "Llegará pronto";
+
+/** Cifras de la práctica, usadas en el hero, "Conóceme" y el pie de página. */
+export const PRACTICE_STATS = {
+  years: 3,
+  patients: "+150",
+};
 
 export const APP_DATA = {
   name: "Dra. Dina Reyes",
@@ -26,7 +48,7 @@ export const APP_DATA = {
 export const SEO_DATA = {
   title: "Dra. Dina Reyes | Fisiatra y Logopedia en Estelí",
   description:
-    "Recupera tu libertad de movimiento y habla con confianza. Tratamientos cercanos, no invasivos y para todas las edades.",
+    "Recupera tu libertad de movimiento y habla con confianza. Rehabilitación basada en evidencia, cercana, no invasiva y para todas las edades.",
   storeTitle: "Tienda — Dra. Dina Reyes",
 };
 
@@ -34,9 +56,22 @@ export const CONTACT_DATA = {
   phone: "+505 8403 7542",
   whatsappUrl:
     "https://wa.me/50584037542?text=Hola,%20me%20interesa%20agendar%20una%20cita",
+  onlineWhatsappUrl:
+    "https://wa.me/50584037542?text=Hola,%20me%20interesa%20la%20terapia%20online",
   email: "dinaerg20@gmail.com",
   emailUrl:
     "mailto:dinaerg20@gmail.com?subject=Consulta&body=Hola,%20me%20interesa%20agendar%20una%20cita.",
+  locations: [
+    {
+      label: "Ocotal — Clínica Radiomédica Bautista",
+      mapUrl:
+        "https://www.google.com/maps/place/Cl%C3%ADnica+Radiom%C3%A9dica+Bautista/@13.6280418,-86.4764999,19.94z",
+    },
+    {
+      label: "Estelí — Clínica Central",
+      mapUrl: "https://www.google.com/maps/@13.0898896,-86.3545098,21z?hl=en",
+    },
+  ],
 };
 
 export interface NavLinkItem {
@@ -49,9 +84,20 @@ export interface DownloadItem {
   description: string;
   /** Ruta pública del archivo dentro de public/, p. ej. "/descargas/guia.pdf". */
   file: string;
-  /** Peso legible, p. ej. "5.2 MB" (opcional). */
+  /** Peso legible, p. ej. "1 MB" (opcional). */
   size?: string;
+  /** Número de páginas (opcional). */
+  pages?: number;
+  /** Portada: si existe, la tarjeta se muestra destacada (opcional). */
+  cover?: { src: string; alt: string; width: number; height: number };
+  /** Qué incluye el documento (opcional). */
+  highlights?: string[];
 }
+
+export const GUIDE = {
+  title: "De la fractura a la recuperación integral",
+  file: "/descargas/de-la-fractura-a-la-recuperacion-integral.pdf",
+};
 
 /**
  * Espacio de descargas. Los archivos van en public/descargas/ y TODO lo que
@@ -63,15 +109,30 @@ export const DOWNLOADS_DATA = {
   id: "descargas",
   title: "Centro de ",
   titleHighlight: "Descargas",
-  description: "Documentos en PDF disponibles para descargar.",
+  description: "Recursos gratuitos en PDF para acompañar tu recuperación.",
   navLabel: "Descargas",
   buttonLabel: "Descargar PDF",
+  freeLabel: "Gratis",
   list: [
     {
-      title: "Resultado de laboratorio",
-      description: "Biometría hemática en formato PDF.",
-      file: "/descargas/resultado-laboratorio.pdf",
-      size: "5.2 MB",
+      title: GUIDE.title,
+      description:
+        "Guía basada en evidencia para recuperarte de fracturas de piernas y cadera: qué está pasando dentro de tu hueso, qué puedes hacer tú en cada etapa y qué dice de verdad la ciencia.",
+      file: GUIDE.file,
+      size: "1 MB",
+      pages: 37,
+      cover: {
+        src: IMAGES.guideCover,
+        alt: `Portada de la guía «${GUIDE.title}»`,
+        width: 655,
+        height: 927,
+      },
+      highlights: [
+        "Las 6 fases de la recuperación, con señales para avanzar",
+        "18 ejercicios explicados paso a paso",
+        "Los 7 pilares: nutrición, dolor, sueño, salud mental y más",
+        "Semáforo de alarma y mitos frente a evidencia",
+      ],
     },
   ] satisfies DownloadItem[],
 };
@@ -93,7 +154,7 @@ export const NAVBAR_DATA = {
   links: [
     { href: "#servicios", label: "Servicios" },
     { href: "#nosotros", label: "Conóceme" },
-    { href: "#ebooks", label: "E-books" },
+    { href: "#recuperacion", label: "Recuperación" },
     ...DOWNLOADS_NAV_LINKS,
     { href: ROUTES.store, label: "Tienda" },
   ] satisfies NavLinkItem[],
@@ -109,8 +170,15 @@ export const HERO_DATA = {
   description:
     "Tratamientos no invasivos para todas las edades. Empatía, profesionalismo y educación para que retomes el control de tu cuerpo, ya sea presencial o desde casa.",
   ctaPrimary: { href: "#contacto", label: "Agenda tu cita presencial" },
-  ctaSecondary: { href: "#online", label: "Terapia Online (Nacional)" },
-  trustIndicators: ["Atención Empática", "Para todas las edades (0-65)"],
+  ctaSecondary: {
+    href: CONTACT_DATA.onlineWhatsappUrl,
+    label: "Terapia Online (Nacional)",
+  },
+  trustIndicators: [
+    "Atención Empática",
+    "Basada en evidencia",
+    "Para todas las edades (0-65)",
+  ],
   image: {
     src: IMAGES.profile,
     alt: "Fisioterapia y recuperación",
@@ -124,7 +192,7 @@ export const HERO_DATA = {
     label: "En sesión de rehabilitación",
   },
   stats: {
-    number: "+1000",
+    number: PRACTICE_STATS.patients,
     label: "Pacientes recuperados",
   },
 };
@@ -176,6 +244,182 @@ export const SERVICES_DATA = {
   ] satisfies ServiceItem[],
 };
 
+/* Biografía tomada de la guía «De la fractura a la recuperación integral». */
+export const ABOUT_DATA = {
+  id: "nosotros",
+  eyebrow: "Conóceme",
+  title: "Dra. Dina ",
+  titleHighlight: "Reyes",
+  role: "Médica fisiatra · Medicina Física y Rehabilitación",
+  paragraphs: [
+    "Soy médica general egresada de la UNAN-Managua y especialista en Fisiatría, la rama de la medicina que se dedica a la rehabilitación. Mi meta es ayudarte a comprender tu dolor, recuperar movimiento y volver a lo que es importante para ti, con un enfoque médico, humano y basado en evidencia.",
+    "Acompañaba a mis pacientes en la rehabilitación de fracturas cuando un accidente me dejó ocho fracturas, entre ellas las de ambas piernas. Me tocó recorrer el mismo camino desde la cama del hospital. Por eso hoy trabajo con dos miradas: la de la especialista que conoce la evidencia y la de la paciente que sabe lo que pesa cada ejercicio.",
+  ],
+  quote:
+    "El día que me tocó estar del otro lado de la camilla aprendí que el miedo baja cuando entiendes qué está pasando dentro de tu hueso y qué te toca hacer hoy.",
+  trainingTitle: "Formación",
+  training: [
+    "Medicina general (UNAN-Managua)",
+    "Fisiatría",
+    "Medicina deportiva",
+    "Electromiografía",
+    "Rehabilitación ortopédica",
+    "Estimulación temprana",
+    "Terapia del lenguaje",
+  ],
+  stats: [
+    { value: String(PRACTICE_STATS.years), label: "años de experiencia" },
+    { value: PRACTICE_STATS.patients, label: "pacientes recuperados" },
+    { value: "2", label: "sedes: Estelí y Ocotal" },
+  ],
+  image: {
+    src: IMAGES.profile,
+    alt: "Dra. Dina Reyes, médica fisiatra",
+    width: 640,
+    height: 640,
+  },
+};
+
+export interface RecoveryPhase {
+  phase: string;
+  name: string;
+  time: string;
+  work: string;
+  next: string;
+}
+
+/* Extracto de «El mapa en 60 segundos» y «Los siete pilares» de la guía. */
+export const RECOVERY_DATA = {
+  id: "recuperacion",
+  title: "Tu recuperación, ",
+  titleHighlight: "paso a paso",
+  description:
+    "La recuperación de una fractura no es una espera a ciegas: avanza por etapas que se pueden reconocer. Cada una tiene un trabajo concreto y una señal que te dice cuándo pasar a la siguiente.",
+  workLabel: "Tu trabajo",
+  nextLabel: "Pasas cuando",
+  phases: [
+    {
+      phase: "Fase 0",
+      name: "Urgencia e inmovilización",
+      time: "Días 0 a 7",
+      work: "Entender tu plan y preguntar antes de salir del hospital.",
+      next: "Tienes indicaciones claras de cuánto apoyar y cómo moverte.",
+    },
+    {
+      phase: "Fase 1",
+      name: "Protección",
+      time: "Semanas 0 a 6",
+      work: "Mover lo que te permitieron y frenar la pérdida de músculo.",
+      next: "El dolor baja y tu equipo te autoriza a apoyar más.",
+    },
+    {
+      phase: "Fase 2",
+      name: "Movilidad y primera carga",
+      time: "Semanas 6 a 12",
+      work: "Recuperar el movimiento, apoyar según lo indicado y caminar con ayudas.",
+      next: "Apoyas lo indicado sin que el dolor aumente al día siguiente.",
+    },
+    {
+      phase: "Fase 3",
+      name: "Fuerza y equilibrio",
+      time: "Meses 3 a 6",
+      work: "Ganar fuerza de pie, trabajar el equilibrio y dejar las ayudas poco a poco.",
+      next: "Haces tu día a día con seguridad y el miedo ya no manda.",
+    },
+    {
+      phase: "Fase 4",
+      name: "Retorno a la vida activa",
+      time: "Meses 6 a 12",
+      work: "Volver al trabajo, al deporte y a exigencias mayores, de forma progresiva.",
+      next: "Tu equipo te da el alta funcional.",
+    },
+    {
+      phase: "Fase 5",
+      name: "Después",
+      time: "Del mes 12 en adelante",
+      work: "Mantener la fuerza, revisar tu salud ósea y decidir si se retira el material de la cirugía.",
+      next: "Esto ya es tu vida, no una fase.",
+    },
+  ] satisfies RecoveryPhase[],
+  note: "Los plazos son una guía, no una fecha límite: cambian según el hueso, el tipo de fractura, la cirugía y tu edad. Avanzas por señales, no por calendario.",
+  pillarsTitle: "Siete pilares que te acompañan en todas las fases",
+  pillars: [
+    "Nutrición",
+    "Movimiento y carga",
+    "Músculo perdido",
+    "Dolor",
+    "Sueño, tabaco y alcohol",
+    "Salud mental",
+    "Entorno y cuidadores",
+  ],
+  goldenRule: {
+    title: "La regla de oro",
+    text: "Lo que puedes mover, muévelo. Lo que puedes cargar, cárgalo. Lo que tu equipo te pidió proteger, protégelo.",
+  },
+  cta: { href: `#${DOWNLOADS_DATA.id}`, label: "Descarga la guía completa" },
+};
+
+export type MythVerdict = "false" | "partial";
+
+export interface MythItem {
+  belief: string;
+  verdict: MythVerdict;
+  evidence: string;
+}
+
+/* Selección de «Mitos frente a evidencia» de la guía. */
+export const MYTHS_DATA = {
+  id: "mitos",
+  title: "Mitos frente a ",
+  titleHighlight: "evidencia",
+  description:
+    "Algunos consejos, repetidos con mucha seguridad, pueden frenar tu recuperación sin que lo notes. Esto es lo que dice la ciencia.",
+  verdictLabels: { false: "Falso", partial: "En parte" } satisfies Record<
+    MythVerdict,
+    string
+  >,
+  list: [
+    {
+      belief: "Hay que estar quieto para que el hueso suelde.",
+      verdict: "false",
+      evidence:
+        "Mover lo permitido y cargar a tiempo suele ayudar o, como mínimo, no perjudicar.",
+    },
+    {
+      belief: "El hueso suelda siempre en seis semanas.",
+      verdict: "false",
+      evidence:
+        "Depende del hueso y de la fractura. En fracturas de tibia operadas con clavo, la consolidación promedio fue de unas 21 a 22 semanas.",
+    },
+    {
+      belief: "Si duele, te estás haciendo daño.",
+      verdict: "partial",
+      evidence:
+        "Una molestia leve que se va en menos de 24 horas suele ser normal. El dolor fuerte, creciente o punzante sí es una señal para parar.",
+    },
+    {
+      belief:
+        "Si la radiografía muestra el hueso consolidado, la recuperación está completa.",
+      verdict: "false",
+      evidence:
+        "El hueso suele ir por delante del músculo, del equilibrio y de la confianza.",
+    },
+    {
+      belief: "Un cigarrito no hace nada.",
+      verdict: "false",
+      evidence:
+        "Fumar se asocia con más del doble de riesgo de que la consolidación se retrase o no ocurra.",
+    },
+    {
+      belief: "El colágeno cura la fractura.",
+      verdict: "false",
+      evidence:
+        "No hay ensayos en humanos que lo demuestren; hay uno en curso.",
+    },
+  ] satisfies MythItem[],
+  note: "Información educativa: no sustituye la valoración de tu equipo tratante.",
+};
+
 export type EbookCover = "default" | "green" | "peach";
 
 export interface EbookItem {
@@ -195,7 +439,13 @@ export const EBOOKS_DATA = {
   title: "E-books & ",
   titleHighlight: "Recursos",
   description:
-    "Material especializado para acompañar tu recuperación en casa, con el respaldo de años de experiencia clínica.",
+    "Material especializado para acompañar tu recuperación en casa, basado en evidencia y en la experiencia clínica.",
+  // Se muestra mientras FEATURES.ebooks sea false.
+  comingSoon: {
+    title: "Nuevos e-books en camino",
+    text: `Estoy preparando más guías para acompañarte en casa. Mientras tanto, descarga gratis «${GUIDE.title}».`,
+    action: { href: `#${DOWNLOADS_DATA.id}`, label: "Ir a descargas" },
+  },
   list: [
     {
       title: "Guía de Manejo del Estrés Físico y Cervical",
@@ -242,15 +492,21 @@ export const LEAD_MAGNET_DATA = {
   id: "recursos",
   title: "Potencia tu recuperación desde hoy con nuestra comunidad.",
   description:
-    "Cuidar tu cuerpo empieza con la información correcta. Descarga gratis mis ",
-  descriptionBold: "E-books y Tips prácticos",
+    "Cuidar tu cuerpo empieza con la información correcta. En ",
+  descriptionBold: "Fisiatips",
   descriptionEnd:
-    " para aliviar lesiones comunes, mejorar la postura en la oficina, y ejercicios en casa.",
+    " compartiré tips claros sobre dolor, movimiento y rehabilitación, basados en evidencia y pensados para tu vida diaria.",
   benefits: [
-    "Guía para manejo del estrés físico y cervical (E-book)",
-    "Tips de habla y estimulación temprana",
-    "Rutinas en video para pausas activas",
+    "Tips prácticos sobre dolor, movimiento y ejercicio terapéutico",
+    "Resúmenes de evidencia explicados en simple",
+    "Aviso de nuevas guías y recursos gratuitos",
   ],
+  // Se muestra en lugar del formulario mientras FEATURES.newsletter sea false.
+  comingSoon: {
+    title: "La comunidad Fisiatips",
+    text: "El registro estará disponible muy pronto. Mientras tanto, la guía gratuita ya está lista para descargar.",
+    action: { href: `#${DOWNLOADS_DATA.id}`, label: "Descargar la guía" },
+  },
   formBox: {
     badge: "100% Gratis",
     title: "Accede al contenido",
@@ -264,19 +520,43 @@ export const LEAD_MAGNET_DATA = {
   },
 };
 
+export const CONTACT_SECTION_DATA = {
+  id: "contacto",
+  title: "Agenda tu ",
+  titleHighlight: "cita",
+  description:
+    "Escríbeme y coordinamos tu cita presencial en Estelí u Ocotal, o tu terapia online desde cualquier parte de Nicaragua.",
+  whatsapp: {
+    title: "WhatsApp",
+    text: "La forma más rápida de agendar.",
+    cta: "Escríbeme por WhatsApp",
+  },
+  online: {
+    title: "Terapia online",
+    text: "Orientación, ejercicios terapéuticos y seguimiento sin salir de casa.",
+    cta: "Consultar terapia online",
+  },
+  email: {
+    title: "Correo",
+    text: "Para consultas, alianzas y charlas educativas.",
+  },
+  locationsTitle: "Dónde atiendo",
+};
+
 export const FOOTER_DATA = {
   brandName: APP_DATA.name,
-  description:
-    "Fisiatra y logopeda con más de una década acompañando familias en Estelí y Ocotal. Atención presencial y online para todas las edades.",
+  description: `Fisiatra con ${PRACTICE_STATS.years} años de experiencia acompañando a pacientes en Estelí y Ocotal. Atención presencial y online para todas las edades.`,
   whatsappCta: "Escríbeme por WhatsApp",
   navigation: {
     title: "Navegar",
     links: [
       { href: "#servicios", label: "Servicios" },
-      { href: "#ebooks", label: "E-books gratuitos" },
+      { href: "#nosotros", label: "Conóceme" },
+      { href: "#recuperacion", label: "Tu recuperación" },
       ...DOWNLOADS_NAV_LINKS,
-      { href: "#recursos", label: "Comunidad & Tips" },
-      { href: ROUTES.store, label: "Tienda de productos" },
+      { href: "#ebooks", label: "E-books" },
+      { href: "#recursos", label: "Comunidad Fisiatips" },
+      { href: ROUTES.store, label: "Tienda" },
       { href: "#contacto", label: "Agendar cita" },
     ] satisfies NavLinkItem[],
   },
@@ -291,20 +571,10 @@ export const FOOTER_DATA = {
   },
   contact: {
     title: "Contacto",
-    locations: [
-      {
-        label: "Ocotal — Clínica Radiomédica Bautista",
-        mapUrl:
-          "https://www.google.com/maps/place/Cl%C3%ADnica+Radiom%C3%A9dica+Bautista/@13.6280418,-86.4764999,19.94z",
-      },
-      {
-        label: "Estelí — Clínica Central",
-        mapUrl:
-          "https://www.google.com/maps/@13.0898896,-86.3545098,21z?hl=en",
-      },
-    ],
     phoneLabel: `${CONTACT_DATA.phone} (WhatsApp)`,
   },
+  disclaimer:
+    "El contenido de este sitio es educativo y no sustituye una valoración médica individual.",
   copyright: "Todos los derechos reservados.",
   regionNote: "Estelí & Ocotal, Nicaragua",
 };
@@ -313,6 +583,12 @@ export const STORE_DATA = {
   headerTitle: "🛒 Tienda Fisiorise",
   backLabel: "Inicio",
   logoAlt: "Logo",
+  // Se muestra en /tienda mientras FEATURES.store sea false.
+  comingSoon: {
+    title: "La tienda está en camino",
+    text: "Muy pronto podrás adquirir aquí productos y recursos para tu recuperación. Mientras tanto, escríbeme por WhatsApp si necesitas algo.",
+    action: { href: CONTACT_DATA.whatsappUrl, label: "Escríbeme por WhatsApp" },
+  },
   searchPlaceholder: "🔍 Buscar producto...",
   noResults: "Sin resultados",
   cart: {

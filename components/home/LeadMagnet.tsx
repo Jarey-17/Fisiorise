@@ -1,4 +1,5 @@
-import { LEAD_MAGNET_DATA } from "@/constants";
+import { FEATURES, LEAD_MAGNET_DATA } from "@/constants";
+import ComingSoon from "@/components/ui/ComingSoon";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
 import LeadForm from "./LeadForm";
@@ -30,12 +31,21 @@ export default function LeadMagnet() {
               </ul>
             </Reveal>
 
-            <Reveal className="lead__form-wrap">
-              <span className="lead__form-badge">{formBox.badge}</span>
-              <h3 className="lead__form-title">{formBox.title}</h3>
-              <p className="lead__form-subtitle">{formBox.subtitle}</p>
-              <LeadForm />
-            </Reveal>
+            {FEATURES.newsletter ? (
+              <Reveal className="lead__form-wrap">
+                <span className="lead__form-badge">{formBox.badge}</span>
+                <h3 className="lead__form-title">{formBox.title}</h3>
+                <p className="lead__form-subtitle">{formBox.subtitle}</p>
+                <LeadForm />
+              </Reveal>
+            ) : (
+              <Reveal>
+                <ComingSoon
+                  {...LEAD_MAGNET_DATA.comingSoon}
+                  className="coming-soon--card"
+                />
+              </Reveal>
+            )}
           </div>
         </div>
       </div>
